@@ -5,8 +5,8 @@ import { useRouter } from "next/router";
 
 import Auth from "../../auth/storeAuth";
 
-import axios from "axios";
 import { Formik, Form, Field } from "formik";
+import API from "../../api";
 
 import {
   Input,
@@ -17,6 +17,13 @@ import {
   AvatarBadge,
   InputRightElement,
   Icon,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  ModalFooter,
 } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
@@ -25,122 +32,141 @@ const Login = () => {
   const router = useRouter();
   const [showPass, setShowPass] = useState(false);
   const handlePass = () => setShowPass(!showPass);
+  const [modal, setModal] = useState(false);
 
   return (
-    <div
-      className="
+    <>
+      <div
+        className="
         transition duration-300
         bg-white
         sm:font-sans sm:bg-gradient-to-br from-blue-50 to-blue-400
         sm:w-screen h-screen sm:py-20
         flex items-center justify-center
       "
-    >
-      <Head>
-        <title>Cicil - Login</title>
-      </Head>
-      <Box height="550px">
-        <div
-          className="
+      >
+        <Head>
+          <title>Cicil - Login</title>
+        </Head>
+        <Box height="550px">
+          <div
+            className="
           bg-white text-center
           max-w-sm h-full mx-auto rounded-3xl p-14"
-        >
-          <Avatar />
-          <h1 className="text-4xl font-semibold text-gray-900 mt-6">
-            Welcome!!
-          </h1>
-          <p className="text-gray-400 text-xs mt-3">
-            Please insert your username & password correctly
-          </p>
-          <Formik
-            initialValues={{
-              email: "",
-              password: "",
-            }}
-            onSubmit={(data, { setSubmitting }) => {
-              setTimeout(() => {
-                axios
-                  .post("https://cicilaja.bagas3.my.id/auth/login", data)
-                  .then((res) => {
-                    console.log(res.data.data);
-                    localStorage.setItem("token", res.data.data);
-                    setLogin(true);
-                    router.push("/dashboard");
-                  });
-              });
-            }}
           >
-            {({ touched, errors }) => (
-              <Form className="flex flex-col gap-2 mt-6">
-                <label htmlFor="" className="text-left opacity-60 text-sm">
-                  Email
-                </label>
-                <Field
-                  type="email"
-                  colorScheme="purple"
-                  rounded="md"
-                  placeholder="Email"
-                  size="md"
-                  name="email"
-                  as={Input}
-                />
-                <label htmlFor="" className="text-left opacity-60 text-sm">
-                  Password
-                </label>
-                <InputGroup size="md">
+            <Avatar />
+            <h1 className="text-3xl font-semibold text-gray-900 mt-6">
+              Selamat Datang!!
+            </h1>
+            <p className="text-gray-400 text-xs mt-3">
+              Silahkan masukkan password dan email anda!
+            </p>
+            <Formik
+              initialValues={{
+                email: "",
+                password: "",
+              }}
+              onSubmit={(data, { setSubmitting }) => {
+                setTimeout(() => {
+                  API.postLogin(data).then((resp) => {
+                    if (resp.data) {
+                      setLogin(true);
+                      localStorage.setItem("token", resp.data);
+                      router.push("/dashboard");
+                    } else {
+                      setModal(true);
+                    }
+                  });
+                  setSubmitting(false);
+                }, 500);
+              }}
+            >
+              {({ touched, errors }) => (
+                <Form className="flex flex-col gap-2 mt-6">
+                  <label htmlFor="" className="text-left opacity-60 text-sm">
+                    Email
+                  </label>
                   <Field
-                    type={showPass ? "text" : "password"}
+                    type="email"
                     colorScheme="purple"
                     rounded="md"
-                    placeholder="Password"
+                    placeholder="Email"
                     size="md"
-                    name="password"
+                    name="email"
                     as={Input}
+                    required
                   />
-                  <InputRightElement>
-                    <Button
-                      h="1.75rem"
-                      size="lg"
-                      variant="link"
-                      onClick={handlePass}
-                      _focus={{ boxShadow: "0" }}
-                    >
-                      {showPass ? (
-                        <Icon as={ViewOffIcon} />
-                      ) : (
-                        <Icon as={ViewIcon} />
-                      )}
-                    </Button>
-                  </InputRightElement>
-                </InputGroup>
-                <Button
-                  // onClick={() => {
-                  //   setLogin(true);
-                  //   router.push("/dashboard");
-                  // }}
-                  colorScheme="purple"
-                  marginTop="5"
-                  type="submit"
-                >
-                  Login
-                </Button>
-              </Form>
-            )}
-          </Formik>
-          <p className="text-gray-400 text-sm mt-5">
-            Don’t have an account? Make it
+                  <label htmlFor="" className="text-left opacity-60 text-sm">
+                    Password
+                  </label>
+                  <InputGroup size="md">
+                    <Field
+                      type={showPass ? "text" : "password"}
+                      colorScheme="purple"
+                      rounded="md"
+                      placeholder="Password"
+                      size="md"
+                      name="password"
+                      as={Input}
+                      required
+                    />
+                    <InputRightElement>
+                      <Button
+                        h="1.75rem"
+                        size="lg"
+                        variant="link"
+                        onClick={handlePass}
+                        _focus={{ boxShadow: "0" }}
+                      >
+                        {showPass ? (
+                          <Icon as={ViewOffIcon} />
+                        ) : (
+                          <Icon as={ViewIcon} />
+                        )}
+                      </Button>
+                    </InputRightElement>
+                  </InputGroup>
+                  <Button colorScheme="purple" marginTop="5" type="submit">
+                    Login
+                  </Button>
+                </Form>
+              )}
+            </Formik>
+            <p className="text-gray-400 text-sm mt-5">
+              Belum memiliki akun? Buat
+              <b
+                onClick={() => router.push("/register")}
+                className="cursor-pointer hover:text-gray-600 transition duration-300"
+              >
+                {" "}
+                disini
+              </b>
+              .
+            </p>
             <b
-              onClick={() => router.push("/register")}
-              className="cursor-pointer hover:text-gray-600 transition duration-300"
+              onClick={() => router.push("/")}
+              className="text-gray-400 text-sm mt-5 cursor-pointer hover:text-gray-600 transition duration-300"
             >
-              {" "}
-              here
+              Menu Utama
             </b>
-            .
-          </p>
-        </div>
-      </Box>
-    </div>
+          </div>
+        </Box>
+      </div>
+      <Modal isOpen={modal} onClose={() => setModal(false)} isCentered={true}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Tidak Dapat Login</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            Ada kesalahan saat kami mencoba mencari akunmu, coba cek email dan
+            password. Cek kembali huruf besar, angka, dan karakter.
+          </ModalBody>
+          <ModalFooter>
+            <Button onClick={() => setModal(false)}>Tutup</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
   );
 };
 

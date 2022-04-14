@@ -11,8 +11,13 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     const login = localStorage.getItem("token");
-    login ? setLogin(true) : setLogin(false);
-  }, [setLogin]);
+    if (login) {
+      setLogin(true);
+    } else {
+      setLogin(false);
+    }
+    console.log(login, isLogin);
+  }, [isLogin, setLogin]);
 
   return (
     <ChakraProvider>

@@ -7,10 +7,18 @@ function Redirect({ children }) {
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLogin) {
+    const login = localStorage.getItem("token");
+
+    if (login) {
+      setLogin(true);
+    } else {
+      setLogin(false);
+    }
+
+    if (!login) {
       router.push("/login");
     }
-  }, [isLogin, router]);
+  }, [isLogin, router, setLogin]);
 
   if (isLogin) {
     return <>{children}</>;

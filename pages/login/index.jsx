@@ -8,6 +8,8 @@ import Auth from "../../auth/storeAuth";
 import { Formik, Form, Field } from "formik";
 import API from "../../api";
 
+import LoginRedirect from "../../auth/loginRedirect";
+
 import {
   Input,
   InputGroup,
@@ -35,7 +37,7 @@ const Login = () => {
   const [modal, setModal] = useState(false);
 
   return (
-    <>
+    <LoginRedirect>
       <div
         className="
         transition duration-300
@@ -166,7 +168,7 @@ const Login = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    </LoginRedirect>
   );
 };
 

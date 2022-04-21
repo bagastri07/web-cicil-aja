@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
 import API from "../../api";
 import Auth from "../../auth/storeAuth";
+import Seo from "../seo";
 
 function DashboardLayout({ page, children }) {
   const router = useRouter();
@@ -24,6 +25,7 @@ function DashboardLayout({ page, children }) {
 
   return (
     <>
+      <Seo page={`${page[0].toUpperCase()}${page.slice(1)}`} />
       <header className="md:w-full md:z-20 flex flex-row flex-wrap items-center justify-between bg-white py-4 px-6 border-b border-gray-300">
         <div className="flex-none w-56 flex flex-row items-center">
           <strong className="ml-1 flex-1 text-2xl font-extrabold">
@@ -91,6 +93,18 @@ function DashboardLayout({ page, children }) {
             >
               Tagihan
             </Button>
+            {user?.is_ambassador ? (
+              <Button
+                colorScheme="purple"
+                variant={page === "ambassador" ? "solid" : "ghost"}
+                w="full"
+                onClick={() => router.push("/dashboard/ambassador")}
+              >
+                Ambassador
+              </Button>
+            ) : (
+              ""
+            )}
           </div>
           <div className="p-2 pb-10">
             <Button

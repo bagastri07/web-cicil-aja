@@ -19,10 +19,10 @@ import DatePicker from "react-datepicker";
 import { useState } from "react";
 import { useRouter } from "next/router";
 
-import { Formik, Form, Field, useFormikContext } from "formik";
+import { Formik, Form, Field } from "formik";
 import API from "../../api";
-import { loadGetInitialProps } from "next/dist/shared/lib/utils";
-import { PhoneIcon } from "@chakra-ui/icons";
+
+import LoginRedirect from "../../auth/loginRedirect";
 
 const Register = () => {
   const [regist, setRegist] = useState(true);
@@ -32,7 +32,7 @@ const Register = () => {
   const router = useRouter();
 
   return (
-    <>
+    <LoginRedirect>
       <div
         className="
         transition duration-300
@@ -345,7 +345,7 @@ const Register = () => {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    </LoginRedirect>
   );
 };
 

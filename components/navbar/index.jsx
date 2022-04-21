@@ -63,7 +63,13 @@ function Navbar() {
               </div>
             </MenuButton>
             <MenuList>
-              <MenuItem>Profile</MenuItem>
+              <MenuItem onClick={() => router.push("/dashboard")}>
+                Dashboard
+              </MenuItem>
+              <MenuDivider />
+              <MenuItem onClick={() => router.push("/dashboard/profile")}>
+                Profile
+              </MenuItem>
               <MenuItem>Pengaturan</MenuItem>
               <MenuDivider />
               <MenuItem

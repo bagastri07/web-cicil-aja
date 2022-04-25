@@ -16,6 +16,17 @@ import {
   StatNumber,
   StatHelpText,
   Tooltip,
+  Tag,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverHeader,
+  PopoverBody,
+  Portal,
+  PopoverFooter,
+  useToast,
 } from "@chakra-ui/react";
 import React from "react";
 import Redirect from "../../../auth/redirect";
@@ -23,9 +34,21 @@ import DashboardLayout from "../../../components/dashboardLayout";
 
 import Link from "next/link";
 import { useRouter } from "next/router";
+import API from "../../../api";
+import { useState, useEffect } from "react";
 
 function Cicilan() {
   const router = useRouter();
+  const toast = useToast();
+  const [item, setItem] = useState("");
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    API.getTicket(token).then((resp) => {
+      console.log(resp.loan_tickets);
+      setItem(resp);
+    });
+  }, []);
 
   return (
     <Redirect>
@@ -55,8 +78,12 @@ function Cicilan() {
             <div className="flex gap-5">
               <Stat bg="white" rounded="xl" padding="5">
                 <StatLabel>Total Cicilan Diajukan</StatLabel>
-                <StatNumber>Rp.2.750.000</StatNumber>
-                <StatHelpText>Hingga 20 Januari 2023</StatHelpText>
+                <StatNumber>
+                  {`Rp.${item?.loan_tickets?.reduce((a, b) => {
+                    return a + b.loan_amount;
+                  }, 0)}`}
+                </StatNumber>
+                <StatHelpText></StatHelpText>
               </Stat>
               <div className="rounded-xl p-5 bg-white flex justify-center items-center max-w-xs">
                 <p>
@@ -76,36 +103,75 @@ function Cicilan() {
           </div>
           <div className="w-full bg-purple-100 rounded-xl p-5 mt-5">
             <h3 className="text-xl mb-2">Permintaan Cicilan Pending</h3>
-            <Stat bg="white" rounded="xl" padding="5">
-              <div className="flex justify-between items-center">
-                <div>
-                  <StatLabel>Belanja Sepatu Baru</StatLabel>
-                  <StatNumber>Rp.250.000</StatNumber>
-                  <StatHelpText>Batas hingga 5 bulan</StatHelpText>
-                  <StatHelpText>Belum di terima (masih pending)</StatHelpText>
-                </div>
-                <Tooltip label="Hapus Permintaan">
-                  <Button colorScheme="red">
-                    <DeleteIcon />
-                  </Button>
-                </Tooltip>
-              </div>
-            </Stat>
-            <Stat bg="white" rounded="xl" padding="5" mt="5">
-              <div className="flex justify-between items-center">
-                <div>
-                  <StatLabel>Beli Handphone Samsung</StatLabel>
-                  <StatNumber>Rp.2.500.000</StatNumber>
-                  <StatHelpText>Batas hingga 12 bulan</StatHelpText>
-                  <StatHelpText>Belum di terima (masih pending)</StatHelpText>
-                </div>
-                <Tooltip label="Hapus Permintaan">
-                  <Button colorScheme="red">
-                    <DeleteIcon />
-                  </Button>
-                </Tooltip>
-              </div>
-            </Stat>
+            <div className="flex flex-col gap-5">
+              {item?.loan_tickets?.map((items) => (
+                <Stat key={items.id} bg="white" rounded="xl" padding="5">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <StatLabel>{items.loanType}</StatLabel>
+                      <StatNumber>{`Rp.${items.loan_amount}`}</StatNumber>
+                      <StatHelpText>{`Batas hingga ${items.loan_tenure_in_months} bulan.`}</StatHelpText>
+                      <StatHelpText>
+                        <Tag
+                          size="md"
+                          colorScheme={
+                            items.status === "pending" ? "yellow" : "green"
+                          }
+                        >
+                          {items?.status}
+                        </Tag>
+                      </StatHelpText>
+                    </div>
+                    {items.status === "pending" ? (
+                      <Popover>
+                        <Tooltip label="Batalkan Permintaan">
+                          <div>
+                            <PopoverTrigger>
+                              <Button colorScheme="red">
+                                <DeleteIcon />
+                              </Button>
+                            </PopoverTrigger>
+                          </div>
+                        </Tooltip>
+                        <Portal>
+                          <PopoverContent>
+                            <PopoverArrow />
+                            <PopoverCloseButton />
+                            <PopoverHeader>Konfirmasi!</PopoverHeader>
+                            <PopoverBody>
+                              Apakah kamu yakin untuk menghapus permintaan ini?
+                            </PopoverBody>
+                            <PopoverFooter>
+                              <Button
+                                colorScheme="red"
+                                onClick={() => {
+                                  const token = localStorage.getItem("token");
+                                  API.delTicket(items.id, token).then(
+                                    (resp) => {
+                                      toast({
+                                        title: "Permintaan telah dihapus!",
+                                        description: `Kami berhasil menghapus permintaanmu.`,
+                                        status: "warning",
+                                        isCloseable: true,
+                                      });
+                                      router.reload();
+                                    }
+                                  );
+                                }}
+                              >
+                                Hapus
+                              </Button>
+                            </PopoverFooter>
+                          </PopoverContent>
+                        </Portal>
+                      </Popover>
+                    ) : (
+                      ""
+                    )}
+                  </div>
+                </Stat>
+              ))}
+            </div>
           </div>
         </div>
       </DashboardLayout>

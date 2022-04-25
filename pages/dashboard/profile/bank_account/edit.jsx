@@ -77,49 +77,51 @@ function Edit() {
           </h2>
           <div className="py-5">
             <Formik>
-              <Form className="w-full bg-purple-100 rounded-xl p-5">
-                <h2 className="text-xl mb-2">Data Bank</h2>
-                <ul>
-                  <li>
-                    Nama Bank:
-                    <Input
-                      variant="outline"
-                      colorScheme="purple"
-                      placeholder="Nama Bank"
-                    />
-                  </li>
-                  <li>
-                    Nomor Rekening:
-                    <Input
-                      variant="outline"
-                      colorScheme="purple"
-                      placeholder="Nomor Rekening"
-                    />
-                  </li>
-                  <li>
-                    Pemilik Rekening:
-                    <Input
-                      variant="outline"
-                      colorScheme="purple"
-                      placeholder="Nama"
-                    />
-                  </li>
-                </ul>
-                <div className="flex mt-10 gap-3">
-                  <Button
-                    type="button"
-                    colorScheme="red"
-                    onClick={() =>
-                      router.push("/dashboard/profile/bank_account")
-                    }
-                  >
-                    Batalkan
-                  </Button>
-                  <Button type="submit" colorScheme="purple">
-                    Submit
-                  </Button>
-                </div>
-              </Form>
+              {({}) => (
+                <Form className="w-full bg-purple-100 rounded-xl p-5">
+                  <h2 className="text-xl mb-2">Data Bank</h2>
+                  <ul>
+                    <li>
+                      Nama Bank:
+                      <Input
+                        variant="outline"
+                        colorScheme="purple"
+                        placeholder="Nama Bank"
+                      />
+                    </li>
+                    <li>
+                      Nomor Rekening:
+                      <Input
+                        variant="outline"
+                        colorScheme="purple"
+                        placeholder="Nomor Rekening"
+                      />
+                    </li>
+                    <li>
+                      Pemilik Rekening:
+                      <Input
+                        variant="outline"
+                        colorScheme="purple"
+                        placeholder="Nama"
+                      />
+                    </li>
+                  </ul>
+                  <div className="flex mt-10 gap-3">
+                    <Button
+                      type="button"
+                      colorScheme="red"
+                      onClick={() =>
+                        router.push("/dashboard/profile/bank_account")
+                      }
+                    >
+                      Batalkan
+                    </Button>
+                    <Button type="submit" colorScheme="purple">
+                      Submit
+                    </Button>
+                  </div>
+                </Form>
+              )}
             </Formik>
           </div>
         </div>

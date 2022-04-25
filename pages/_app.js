@@ -16,7 +16,7 @@ function MyApp({ Component, pageProps }) {
     } else {
       setLogin(false);
     }
-    console.log(login, isLogin);
+    // console.log(login, isLogin);
   }, [isLogin, setLogin]);
 
   return (

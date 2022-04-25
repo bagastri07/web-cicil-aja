@@ -14,13 +14,14 @@ import {
   StatLabel,
   StatNumber,
   StatHelpText,
+  Tooltip,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import API from "../../../api";
 import Redirect from "../../../auth/redirect";
 import DashboardLayout from "../../../components/dashboardLayout";
 import Link from "next/link";
-import { ChevronRightIcon } from "@chakra-ui/icons";
+import { CheckIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 
 function Ambassador() {
@@ -69,6 +70,39 @@ function Ambassador() {
                 </Stat>
               </div>
             </div>
+          </div>
+          <div className="w-full bg-purple-100 rounded-xl p-5 mt-5">
+            <h3 className="text-xl mb-2">Daftar Permintaan Yang Masuk</h3>
+            <Stat bg="white" rounded="xl" padding="5">
+              <div className="flex justify-between items-center">
+                <div>
+                  <StatLabel>Belanja Buku</StatLabel>
+                  <StatNumber>Rp.60.000</StatNumber>
+                  <StatHelpText>Batas hingga 5 bulan</StatHelpText>
+                  <StatHelpText>Belum di terima (masih pending)</StatHelpText>
+                </div>
+                <Tooltip label="Review Permintaan">
+                  <Button colorScheme="purple">
+                    <CheckIcon />
+                  </Button>
+                </Tooltip>
+              </div>
+            </Stat>
+            <Stat bg="white" rounded="xl" padding="5" mt="5">
+              <div className="flex justify-between items-center">
+                <div>
+                  <StatLabel>Bayar BPP</StatLabel>
+                  <StatNumber>Rp.4.000.000</StatNumber>
+                  <StatHelpText>Batas hingga 14 bulan</StatHelpText>
+                  <StatHelpText>Belum di terima (masih pending)</StatHelpText>
+                </div>
+                <Tooltip label="Review Permintaan">
+                  <Button colorScheme="purple">
+                    <CheckIcon />
+                  </Button>
+                </Tooltip>
+              </div>
+            </Stat>
           </div>
         </div>
       </DashboardLayout>

@@ -1,53 +1,45 @@
 import fetcher from "./fetcher";
 
-const apiTicket = {
-  postTicket: (data, token) =>
+const apiAmbassador = {
+  getAllLoan: (token) =>
     fetcher
-      .post("/loan-tickets", data, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((resp) => resp.data)
-      .catch((err) => err),
-
-  getTicket: (token) =>
-    fetcher
-      .get("/loan-tickets", {
+      .get("/_ambassador/loan-tickets", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((resp) => resp.data.data)
       .catch((err) => err),
 
-  getTicketPending: (token) =>
+  getLoanById: (id, token) =>
     fetcher
-      .get("/loan-tickets?status=pending", {
+      .get(`/_ambassador/loan-tickets/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((resp) => resp.data.data)
       .catch((err) => err),
 
-  getTicketAccepted: (token) =>
+  patchLoan: (id, token) =>
     fetcher
-      .get("/loan-tickets?status=accepted", {
+      .patch(`/_ambassador/loan-tickets/${id}/reviewed`, null, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((resp) => resp.data.data)
       .catch((err) => err),
 
-  getDetailTicket: (id, token) =>
+  getCommission: (token) =>
     fetcher
-      .get(`/loan-tickets/${id}`, {
+      .get("_ambassador/commissions/balance-detail", {
         headers: { Authorization: `Bearer ${token}` },
       })
-      .then((resp) => resp.data)
+      .then((resp) => resp.data.data)
       .catch((err) => err),
 
-  delTicket: (id, token) =>
+  getAllBorrower: (id, token) =>
     fetcher
-      .delete(`/loan-tickets/${id}`, {
+      .get(`/_ambassador/borrowers/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
-      .then((resp) => resp.data)
+      .then((resp) => resp.data.data)
       .catch((err) => err),
 };
 
-export default apiTicket;
+export default apiAmbassador;

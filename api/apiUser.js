@@ -26,7 +26,10 @@ const apiUser = {
   postKtm: (data, token) =>
     fetcher
       .post("/borrowers/upload-ktm", data, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
       })
       .then((resp) => resp.data)
       .catch((err) => err),
@@ -34,7 +37,10 @@ const apiUser = {
   postKtp: (data, token) =>
     fetcher
       .post("/borrowers/upload-ktp", data, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
       })
       .then((resp) => resp.data)
       .catch((err) => err),

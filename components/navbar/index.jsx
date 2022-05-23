@@ -7,6 +7,8 @@ import {
   MenuItem,
   MenuList,
   Avatar,
+  SkeletonCircle,
+  SkeletonText,
 } from "@chakra-ui/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -17,11 +19,17 @@ import API from "../../api";
 function Navbar() {
   const router = useRouter();
   const [user, setUser] = useState("");
+  const [loading, setLoading] = useState(true);
   const [isLogin, setLogin] = Auth((state) => [state.isLogin, state.setLogin]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    API.getUser(token).then((resp) => setUser(resp));
+    API.getUser(token).then((resp) => {
+      setTimeout(() => {
+        setUser(resp);
+        setLoading(false);
+      }, 300);
+    });
   }, []);
 
   return (
@@ -54,12 +62,23 @@ function Navbar() {
               p="2"
               ml="1"
             >
-              <div className="flex gap-4">
-                <Avatar name={`${user.name}`} size="sm" />
-                <div>
-                  <p className="text-md leading-tight">{user.name}</p>
-                  <p className="text-xs leading-none">{user.university}</p>
-                </div>
+              <div className="">
+                {loading ? (
+                  <div className="flex gap-4">
+                    <SkeletonCircle />
+                    <div>
+                      <SkeletonText noOfLines={2} spacing="4" w="32" />
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex gap-4">
+                    <Avatar name={`${user.name}`} size="sm" />
+                    <div>
+                      <p className="text-md leading-tight">{user.name}</p>
+                      <p className="text-xs leading-none">{user.university}</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </MenuButton>
             <MenuList>
@@ -70,7 +89,6 @@ function Navbar() {
               <MenuItem onClick={() => router.push("/dashboard/profile")}>
                 Profile
               </MenuItem>
-              <MenuItem>Pengaturan</MenuItem>
               <MenuDivider />
               <MenuItem
                 onClick={() => {

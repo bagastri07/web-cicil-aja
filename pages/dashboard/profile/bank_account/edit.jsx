@@ -12,6 +12,7 @@ import {
   CloseButton,
   Divider,
   Input,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import API from "../../../../api";
@@ -21,11 +22,12 @@ import dayjs from "dayjs";
 import id from "dayjs/locale/id";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
 
 function Edit() {
   const [user, setUser] = useState("");
   const router = useRouter();
+  const toast = useToast();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -76,14 +78,48 @@ function Edit() {
             )}
           </h2>
           <div className="py-5">
-            <Formik>
+            <Formik
+              initialValues={{
+                bank_name: "",
+                account_number: "",
+                account_recipient: "",
+              }}
+              onSubmit={(data, { setSubmitting }) => {
+                setTimeout(() => {
+                  const token = localStorage.getItem("token");
+                  API.putBank(data, token).then((resp) => {
+                    if (resp.message) {
+                      toast({
+                        title: "Gagal Diperbarui!",
+                        description: "Perhatikan kembali informasimu",
+                        status: "error",
+                        isClosable: true,
+                      });
+                    } else {
+                      toast({
+                        title: "Berhasil Diperbarui!",
+                        description:
+                          "Informasi mengenai bank mu telah berhasil diperbarui",
+                        status: "success",
+                        isClosable: true,
+                      });
+                      router.push("/dashboard/profile/bank_account");
+                    }
+                  });
+                  setSubmitting(false);
+                });
+              }}
+            >
               {({}) => (
                 <Form className="w-full bg-purple-100 rounded-xl p-5">
                   <h2 className="text-xl mb-2">Data Bank</h2>
                   <ul>
                     <li>
                       Nama Bank:
-                      <Input
+                      <Field
+                        as={Input}
+                        type="text"
+                        name="bank_name"
                         variant="outline"
                         colorScheme="purple"
                         placeholder="Nama Bank"
@@ -91,16 +127,22 @@ function Edit() {
                     </li>
                     <li>
                       Nomor Rekening:
-                      <Input
+                      <Field
+                        as={Input}
+                        name="account_number"
                         variant="outline"
+                        type="text"
                         colorScheme="purple"
                         placeholder="Nomor Rekening"
                       />
                     </li>
                     <li>
                       Pemilik Rekening:
-                      <Input
+                      <Field
+                        as={Input}
+                        name="account_recipient"
                         variant="outline"
+                        type="text"
                         colorScheme="purple"
                         placeholder="Nama"
                       />

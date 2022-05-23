@@ -6,6 +6,8 @@ import {
   MenuDivider,
   MenuItem,
   MenuList,
+  SkeletonCircle,
+  SkeletonText,
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React, { useState, useEffect } from "react";
@@ -16,11 +18,17 @@ import Seo from "../seo";
 function DashboardLayout({ page, children }) {
   const router = useRouter();
   const [user, setUser] = useState("");
+  const [loading, setLoading] = useState(true);
   const [isLogin, setLogin] = Auth((state) => [state.isLogin, state.setLogin]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    API.getUser(token).then((resp) => setUser(resp));
+    API.getUser(token).then((resp) => {
+      setTimeout(() => {
+        setUser(resp);
+        setLoading(false);
+      }, 300);
+    });
   }, []);
 
   return (
@@ -42,17 +50,29 @@ function DashboardLayout({ page, children }) {
             p="2"
             ml="1"
           >
-            <div className="flex gap-4">
-              <Avatar name={`${user.name}`} size="sm" />
-              <div>
-                <p className="text-md leading-tight">{user.name}</p>
-                <p className="text-xs leading-none">{user.university}</p>
+            {loading ? (
+              <div className="flex gap-4">
+                <SkeletonCircle />
+                <div>
+                  <SkeletonText noOfLines={2} spacing="4" w="32" />
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="flex gap-4">
+                <Avatar name={`${user.name}`} size="sm" />
+                <div>
+                  <p className="text-md leading-tight">{user.name}</p>
+                  <p className="text-xs leading-none">{user.university}</p>
+                </div>
+              </div>
+            )}
           </MenuButton>
           <MenuList>
-            <MenuItem>Profile</MenuItem>
-            <MenuItem>Pengaturan</MenuItem>
+            <MenuItem onClick={() => router.push("/")}>Home</MenuItem>
+            <MenuDivider />
+            <MenuItem onClick={() => router.push("/dashboard/profile")}>
+              Profile
+            </MenuItem>
             <MenuDivider />
             <MenuItem
               onClick={() => {

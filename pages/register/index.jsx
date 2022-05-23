@@ -76,7 +76,6 @@ const Register = () => {
                       delete data.startDate;
 
                       data.birthday = isoDate;
-                      // console.log(data);
 
                       setForm(data);
                       setRegist(false);
@@ -169,14 +168,11 @@ const Register = () => {
                   initialValues={form}
                   onSubmit={(data, { setSubmitting }) => {
                     setTimeout(() => {
-                      // console.log(data);
                       API.postRegist(data).then((resp) => {
                         if (resp.data) {
-                          // console.log(resp.data);
                           setSuccess(true);
                         } else {
                           setModal(true);
-                          // console.log("err");
                         }
                       });
                       setSubmitting(false);

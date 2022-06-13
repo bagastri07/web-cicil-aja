@@ -45,6 +45,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 function Pinjaman() {
   const router = useRouter();
   const [data, setData] = useState("");
+  const [user, setUser] = useState("");
   const [showPhone, setShowPhone] = useState(false);
   const [loading, setLoading] = useState(true);
   const { id } = router.query;
@@ -52,12 +53,20 @@ function Pinjaman() {
   dayjs.extend(relativeTime);
 
   useEffect(() => {
+    if (user.is_ambassador == false) {
+      router.push("/dashboard");
+    }
     const token = localStorage.getItem("token");
+
+    API.getUser(token).then((resp) => {
+      setUser(resp);
+    });
     id &&
       API.getLoanById(id, token).then((resp) => {
         setData(resp);
         setLoading(false);
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   return (

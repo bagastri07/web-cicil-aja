@@ -195,60 +195,81 @@ function Cicilan() {
                                     >
                                       {items?.status}
                                     </Tag>
+                                    {items?.reviewed_by_ambassador_at ? (
+                                      <Tag colorScheme="purple">
+                                        sudah di review
+                                      </Tag>
+                                    ) : (
+                                      <Tag colorScheme="red">
+                                        belum di review
+                                      </Tag>
+                                    )}
                                   </StatHelpText>
                                 </div>
-                                {items.status === "pending" ? (
-                                  <Popover>
-                                    <Tooltip label="Batalkan Permintaan">
-                                      <div>
-                                        <PopoverTrigger>
-                                          <Button colorScheme="red">
-                                            <DeleteIcon />
-                                          </Button>
-                                        </PopoverTrigger>
-                                      </div>
-                                    </Tooltip>
-                                    <Portal>
-                                      <PopoverContent>
-                                        <PopoverArrow />
-                                        <PopoverCloseButton />
-                                        <PopoverHeader>
-                                          Konfirmasi!
-                                        </PopoverHeader>
-                                        <PopoverBody>
-                                          Apakah kamu yakin untuk menghapus
-                                          permintaan ini?
-                                        </PopoverBody>
-                                        <PopoverFooter>
-                                          <Button
-                                            colorScheme="red"
-                                            onClick={() => {
-                                              const token =
-                                                localStorage.getItem("token");
-                                              API.delTicket(
-                                                items.id,
-                                                token
-                                              ).then((resp) => {
-                                                toast({
-                                                  title:
-                                                    "Permintaan telah dihapus!",
-                                                  description: `Kami berhasil menghapus permintaanmu.`,
-                                                  status: "warning",
-                                                  isCloseable: true,
+                                <div className="flex justify-end items-center gap-5">
+                                  {items.status === "pending" ? (
+                                    <Popover>
+                                      <Tooltip label="Batalkan Permintaan">
+                                        <div>
+                                          <PopoverTrigger>
+                                            <Button colorScheme="red">
+                                              <DeleteIcon />
+                                            </Button>
+                                          </PopoverTrigger>
+                                        </div>
+                                      </Tooltip>
+                                      <Portal>
+                                        <PopoverContent>
+                                          <PopoverArrow />
+                                          <PopoverCloseButton />
+                                          <PopoverHeader>
+                                            Konfirmasi!
+                                          </PopoverHeader>
+                                          <PopoverBody>
+                                            Apakah kamu yakin untuk menghapus
+                                            permintaan ini?
+                                          </PopoverBody>
+                                          <PopoverFooter>
+                                            <Button
+                                              colorScheme="red"
+                                              onClick={() => {
+                                                const token =
+                                                  localStorage.getItem("token");
+                                                API.delTicket(
+                                                  items.id,
+                                                  token
+                                                ).then((resp) => {
+                                                  toast({
+                                                    title:
+                                                      "Permintaan telah dihapus!",
+                                                    description: `Kami berhasil menghapus permintaanmu.`,
+                                                    status: "warning",
+                                                    isCloseable: true,
+                                                  });
+                                                  router.reload();
                                                 });
-                                                router.reload();
-                                              });
-                                            }}
-                                          >
-                                            Hapus
-                                          </Button>
-                                        </PopoverFooter>
-                                      </PopoverContent>
-                                    </Portal>
-                                  </Popover>
-                                ) : (
-                                  ""
-                                )}
+                                              }}
+                                            >
+                                              Hapus
+                                            </Button>
+                                          </PopoverFooter>
+                                        </PopoverContent>
+                                      </Portal>
+                                    </Popover>
+                                  ) : (
+                                    ""
+                                  )}
+                                  <Button
+                                    colorScheme="purple"
+                                    onClick={() =>
+                                      router.push(
+                                        `/dashboard/cicilan/${items.id}`
+                                      )
+                                    }
+                                  >
+                                    Detail
+                                  </Button>
+                                </div>
                               </div>
                             </Stat>
                           ))}
@@ -281,6 +302,15 @@ function Cicilan() {
                                     <Tag size="md" colorScheme="yellow">
                                       pending
                                     </Tag>
+                                    {items?.reviewed_by_ambassador_at ? (
+                                      <Tag colorScheme="purple">
+                                        sudah di review
+                                      </Tag>
+                                    ) : (
+                                      <Tag colorScheme="red">
+                                        belum di review
+                                      </Tag>
+                                    )}
                                   </StatHelpText>
                                 </div>
                                 <Popover>
@@ -360,6 +390,15 @@ function Cicilan() {
                                     <Tag size="md" colorScheme="green">
                                       accepted
                                     </Tag>
+                                    {items?.reviewed_by_ambassador_at ? (
+                                      <Tag colorScheme="purple">
+                                        sudah di review
+                                      </Tag>
+                                    ) : (
+                                      <Tag colorScheme="red">
+                                        belum di review
+                                      </Tag>
+                                    )}
                                   </StatHelpText>
                                 </div>
                               </div>

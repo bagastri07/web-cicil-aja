@@ -37,11 +37,10 @@ function Ambassador() {
   const router = useRouter();
 
   useEffect(() => {
-    setTimeout(() => {
-      if (user.is_ambassador == false) {
-        router.push("/dashboard");
-      }
-    }, 500);
+    if (user.is_ambassador == false) {
+      router.push("/dashboard");
+    }
+
     const token = localStorage.getItem("token");
     API.getUser(token).then((resp) => {
       setTimeout(() => {
@@ -138,7 +137,7 @@ function Ambassador() {
                           {items.reviewed_by_ambassador_at ? (
                             <Tag colorScheme="purple">sudah di review</Tag>
                           ) : (
-                            ""
+                            <Tag colorScheme="red">belum di review</Tag>
                           )}
                         </StatHelpText>
                       </div>

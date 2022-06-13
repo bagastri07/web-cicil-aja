@@ -161,11 +161,11 @@ function Dashboard() {
                     </h3>
                     <p>
                       Dapatkan berbagai benefit menarik menjadi ambassador dari
-                      Cicil Aja. Lorem ipsum dolor sit, amet consectetur
-                      adipisicing elit. Perspiciatis similique eum perferendis!
-                      Itaque labore laborum nihil facilis, ex eos aliquam autem
-                      adipisci ad debitis molestiae? Earum fugit veritatis
-                      explicabo corrupti.{" "}
+                      Cicil Aja. Menjadi ambassador memungkinkanmu untuk
+                      mendapatkan penghasilan sendiri hanya dengan me-review
+                      pinjaman yang ada. Daftar, tunggu hingga pendaftaran
+                      selesai, dan mulai dapatkan uangmu dengan me-review dari
+                      gadgetmu.{" "}
                       <Button variant="link" colorScheme="purple">
                         Daftar disini
                       </Button>

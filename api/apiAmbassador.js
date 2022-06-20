@@ -40,6 +40,22 @@ const apiAmbassador = {
       })
       .then((resp) => resp.data.data)
       .catch((err) => err),
+
+  getCommissionHistory: (token) =>
+    fetcher
+      .get(`/_ambassador/commissions/comission-history`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((resp) => resp.data)
+      .catch((err) => err),
+
+  postWithdrawComission: (data, token) =>
+    fetcher
+      .post("/_ambassador/commissions/withdraw", data, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((resp) => resp.data)
+      .catch((err) => err),
 };
 
 export default apiAmbassador;

@@ -18,6 +18,12 @@ import {
   Tag,
   Tooltip,
   Spinner,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import API from "../../../api";
@@ -27,6 +33,7 @@ import { phoneNum, bankNum } from "../../../regex/point";
 import { ChevronRightIcon, ViewIcon } from "@chakra-ui/icons";
 import { useRouter } from "next/router";
 import dayjs from "dayjs";
+import Image from "next/image";
 
 function BorrowersId() {
   const router = useRouter();
@@ -34,12 +41,16 @@ function BorrowersId() {
   const [showBank, setShowBank] = useState(false);
   const [data, setData] = useState("");
   const [loading, setLoading] = useState(true);
+  const [ktp, setKtp] = useState(false);
+  const [ktm, setKtm] = useState(false);
+
   const { id } = router.query;
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     id &&
       API.getAdminBorrowerId(id, token).then((resp) => {
+        console.log(resp);
         setData(resp.data);
         setLoading(false);
       });
@@ -71,6 +82,45 @@ function BorrowersId() {
           </Breadcrumb>
           <Divider marginTop="5" />
         </div>
+
+        {/* show ktp modal */}
+        <Modal isOpen={ktp} onClose={() => setKtp(false)} size={"full"}>
+          <ModalOverlay />
+          <ModalContent bg={"rgb(0 0 0 / 0.6)"} rounded={"unset"}>
+            <ModalHeader></ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <div className="w-full h-[85vh] relative">
+                <Image
+                  src={`https://cicilaja.bagas3.my.id/${data?.borrower_document?.ktp_url}`}
+                  alt="Foto KTP"
+                  layout="fill"
+                  objectFit="contain"
+                />
+              </div>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+
+        {/* show ktm modal */}
+        <Modal isOpen={ktm} onClose={() => setKtm(false)} size={"full"}>
+          <ModalOverlay />
+          <ModalContent bg={"rgb(0 0 0 / 0.6)"} rounded={"unset"}>
+            <ModalHeader></ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <div className="w-full h-[85vh] relative">
+                <Image
+                  src={`https://cicilaja.bagas3.my.id/${data?.borrower_document?.ktm_url}`}
+                  alt="Foto KTM"
+                  layout="fill"
+                  objectFit="contain"
+                />
+              </div>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+
         <h1 className="text-4xl">Peminjam</h1>
         {loading ? (
           <div className="w-full h-full flex justify-center items-center">
@@ -144,6 +194,65 @@ function BorrowersId() {
                     <p>Pengguna belum melengkapi informasi bank</p>
                   </div>
                 )}
+              </div>
+              <div className="mt-5">
+                <h2 className="text-xl mb-2">Data Dokumen</h2>
+                <ul>
+                  <li>KTP</li>
+                  <li>
+                    <div className="w-60 h-40 relative">
+                      {data?.borrower_document?.ktp_url ? (
+                        <>
+                          <button
+                            onClick={() => setKtp(true)}
+                            className="opacity-0 hover:opacity-100 transition absolute z-10 w-full h-full bg-black/40 flex justify-center items-center text-white font-bold"
+                          >
+                            Show Fullsize
+                          </button>
+                          <Image
+                            src={`https://cicilaja.bagas3.my.id/${data?.borrower_document?.ktp_url}`}
+                            alt="Foto KTP"
+                            layout="fill"
+                            objectFit="contain"
+                          />
+                        </>
+                      ) : (
+                        <p className="w-full h-full flex justify-center items-center">
+                          <span className="text-center text-2xl">
+                            Belum ada foto KTP
+                          </span>
+                        </p>
+                      )}
+                    </div>
+                  </li>
+                  <li>KTM</li>
+                  <li>
+                    <div className="w-60 h-40 relative">
+                      {data?.borrower_document?.ktm_url ? (
+                        <>
+                          <button
+                            onClick={() => setKtm(true)}
+                            className="opacity-0 hover:opacity-100 transition absolute z-10 w-full h-full bg-black/40 flex justify-center items-center text-white font-bold"
+                          >
+                            Show Fullsize
+                          </button>
+                          <Image
+                            src={`https://cicilaja.bagas3.my.id/${data?.borrower_document?.ktm_url}`}
+                            alt="Foto KTM"
+                            layout="fill"
+                            objectFit="contain"
+                          />
+                        </>
+                      ) : (
+                        <p className="w-full h-full flex justify-center items-center">
+                          <span className="text-center text-2xl">
+                            Belum ada foto KTM
+                          </span>
+                        </p>
+                      )}
+                    </div>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>

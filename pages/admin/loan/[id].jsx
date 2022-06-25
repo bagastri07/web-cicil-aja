@@ -121,7 +121,7 @@ function BorrowersId() {
                       {data?.item_url}
                     </a>
                   </li>
-                  <li>Bunga: {data?.interest_rate}%</li>
+                  <li>Bunga: {data?.interest_rate * 100}%</li>
                   <li>
                     Maksimal Pembayaran: Sebelum {data?.loan_tenure_in_months}{" "}
                     bulan
@@ -131,7 +131,13 @@ function BorrowersId() {
               <div className="mt-10">
                 Status:{" "}
                 <Tag
-                  colorScheme={data?.status == "accepted" ? "green" : "yellow"}
+                  colorScheme={
+                    data?.status == "accepted"
+                      ? "green"
+                      : data?.status == "rejected"
+                      ? "red"
+                      : "yellow"
+                  }
                 >
                   {data?.status}
                 </Tag>
@@ -171,58 +177,106 @@ function BorrowersId() {
                 )}
               </div>
             </div>
-            {data?.status == "accepted" ? (
-              <Button colorScheme="purple" disabled>
-                Accept Permintaan
+
+            <div className="flex gap-5">
+              {data?.status == "accepted" || data?.status == "rejected" ? (
+                <Button colorScheme="purple" disabled>
+                  Accept Permintaan
+                </Button>
+              ) : (
+                <Popover>
+                  <div>
+                    <PopoverTrigger>
+                      <Button colorScheme="purple">Accept Permintaan</Button>
+                    </PopoverTrigger>
+                  </div>
+                  <Portal>
+                    <PopoverContent>
+                      <PopoverArrow />
+                      <PopoverCloseButton />
+                      <PopoverHeader>Konfirmasi!</PopoverHeader>
+                      <PopoverBody>
+                        Apakah kamu yakin untuk meng-acc permintaan ini?
+                      </PopoverBody>
+                      <PopoverFooter>
+                        <Button
+                          colorScheme="purple"
+                          onClick={() => {
+                            const token = localStorage.getItem("token");
+                            API.patchAdminLoan(id, token).then((resp) => {
+                              console.log(resp);
+                              if (data?.accepted_at) {
+                                toast({
+                                  title: "Permintaan telah di-accept!",
+                                  description: `Permintaan telah di accept.`,
+                                  status: "success",
+                                  isCloseable: true,
+                                });
+                                router.reload();
+                              } else {
+                                toast({
+                                  title: "Gagal",
+                                  description: `Ambassador perlu me-review permintaan`,
+                                  status: "error",
+                                  isCloseable: true,
+                                });
+                              }
+                            });
+                          }}
+                        >
+                          Review
+                        </Button>
+                      </PopoverFooter>
+                    </PopoverContent>
+                  </Portal>
+                </Popover>
+              )}
+              {data?.status == "accepted" || data?.status == "rejected" ? (
+                <Button colorScheme="red" disabled>
+                  Reject Permintaan
+                </Button>
+              ) : (
+                <Popover>
+                  <div>
+                    <PopoverTrigger>
+                      <Button colorScheme="red">Reject Permintaan</Button>
+                    </PopoverTrigger>
+                  </div>
+                  <Portal>
+                    <PopoverContent>
+                      <PopoverArrow />
+                      <PopoverCloseButton />
+                      <PopoverHeader>Konfirmasi!</PopoverHeader>
+                      <PopoverBody>
+                        Apakah kamu yakin untuk meng-reject permintaan ini?
+                      </PopoverBody>
+                      <PopoverFooter>
+                        <Button
+                          colorScheme="red"
+                          onClick={() => {
+                            const token = localStorage.getItem("token");
+                            API.patchAdminLoanReject(id, token).then((resp) => {
+                              toast({
+                                title: "Permintaan telah di-reject!",
+                                description: `Permintaan telah di reject.`,
+                                status: "warning",
+                                isCloseable: true,
+                              });
+                              router.reload();
+                            });
+                          }}
+                        >
+                          Reject
+                        </Button>
+                      </PopoverFooter>
+                    </PopoverContent>
+                  </Portal>
+                </Popover>
+              )}
+              <Button onClick={() => router.push(`/admin/borrowers/${id}`)}>
+                Lihat Detail
               </Button>
-            ) : (
-              <Popover>
-                <div>
-                  <PopoverTrigger>
-                    <Button colorScheme="purple">Accept Permintaan</Button>
-                  </PopoverTrigger>
-                </div>
-                <Portal>
-                  <PopoverContent>
-                    <PopoverArrow />
-                    <PopoverCloseButton />
-                    <PopoverHeader>Konfirmasi!</PopoverHeader>
-                    <PopoverBody>
-                      Apakah kamu yakin untuk meng-acc permintaan ini?
-                    </PopoverBody>
-                    <PopoverFooter>
-                      <Button
-                        colorScheme="purple"
-                        onClick={() => {
-                          const token = localStorage.getItem("token");
-                          API.patchAdminLoan(id, token).then((resp) => {
-                            console.log(resp);
-                            if (data?.accepted_at) {
-                              toast({
-                                title: "Permintaan telah di-accept!",
-                                description: `Permintaan telah di accept.`,
-                                status: "success",
-                                isCloseable: true,
-                              });
-                              // router.push("/dashboard/ambassador");
-                            } else {
-                              toast({
-                                title: "Gagal",
-                                description: `Ambassador perlu me-review permintaan`,
-                                status: "error",
-                                isCloseable: true,
-                              });
-                            }
-                          });
-                        }}
-                      >
-                        Review
-                      </Button>
-                    </PopoverFooter>
-                  </PopoverContent>
-                </Portal>
-              </Popover>
-            )}
+            </div>
           </div>
         )}
       </AdminDashboardLayout>

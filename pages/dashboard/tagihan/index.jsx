@@ -29,6 +29,13 @@ import {
   Spinner,
   toast,
   useToast,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverBody,
+  PopoverHeader,
+  PopoverFooter,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import Redirect from "../../../auth/redirect";
@@ -229,31 +236,50 @@ function Tagihan() {
                                 ) : (
                                   <Tooltip label="Bayar sekarang">
                                     <div>
-                                      <Button
-                                        colorScheme="purple"
-                                        onClick={() => {
-                                          const token =
-                                            localStorage.getItem("token");
-                                          API.patchBill(items.id, token).then(
-                                            (resp) => {
-                                              resp.message ==
-                                                toast({
-                                                  title:
-                                                    "Tagihan telah dibayar!",
-                                                  description:
-                                                    "Selamat! Kamu telah membayar tagihan",
-                                                  status: "success",
-                                                  isCloseable: true,
+                                      <Popover>
+                                        <PopoverTrigger>
+                                          <Button colorScheme={"purple"}>
+                                            <CheckIcon />
+                                          </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent>
+                                          <PopoverArrow />
+                                          <PopoverHeader>
+                                            Bayar Tagihan
+                                          </PopoverHeader>
+                                          <PopoverBody>
+                                            Bayar tagihan ini?
+                                          </PopoverBody>
+                                          <PopoverFooter>
+                                            <Button
+                                              colorScheme="purple"
+                                              onClick={() => {
+                                                const token =
+                                                  localStorage.getItem("token");
+                                                API.patchBill(
+                                                  items.id,
+                                                  token
+                                                ).then((resp) => {
+                                                  resp.message ==
+                                                    toast({
+                                                      title:
+                                                        "Tagihan telah dibayar!",
+                                                      description:
+                                                        "Selamat! Kamu telah membayar tagihan",
+                                                      status: "success",
+                                                      isCloseable: true,
+                                                    });
+                                                  setTimeout(() => {
+                                                    router.reload();
+                                                  }, 100);
                                                 });
-                                              setTimeout(() => {
-                                                router.reload();
-                                              }, 100);
-                                            }
-                                          );
-                                        }}
-                                      >
-                                        <CheckIcon />
-                                      </Button>
+                                              }}
+                                            >
+                                              Bayar Sekarang
+                                            </Button>
+                                          </PopoverFooter>
+                                        </PopoverContent>
+                                      </Popover>
                                     </div>
                                   </Tooltip>
                                 )}

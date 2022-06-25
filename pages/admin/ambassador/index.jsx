@@ -16,6 +16,13 @@ import {
   StatNumber,
   StatHelpText,
   Tooltip,
+  Popover,
+  PopoverTrigger,
+  PopoverBody,
+  PopoverContent,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverHeader,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import API from "../../../api";
@@ -76,21 +83,79 @@ function Ambassador() {
                         </StatLabel>
                         <StatHelpText>{items.email}</StatHelpText>
                       </div>
-                      <div>
-                        <Tooltip label="Acc sebagai ambassador">
+                      <div className="flex gap-2 items-center">
+                        <Tooltip hasArrow label="Lihat detail pengguna">
                           <Button
-                            colorScheme="purple"
-                            onClick={() => {
-                              const token = localStorage.getItem("token");
-                              API.patchAdminAmbassador(
-                                items.borrower_id,
-                                token
-                              ).then(() => router.reload());
-                            }}
+                            onClick={() =>
+                              router.push(
+                                `/admin/borrowers/${items.borrower_id}`
+                              )
+                            }
+                            variantColor="purple"
+                            variant="outline"
                           >
-                            <CheckIcon />
+                            <span className="">Detail</span>
                           </Button>
                         </Tooltip>
+                        <Popover>
+                          <PopoverTrigger>
+                            <Button colorScheme={"purple"}>
+                              <CheckIcon />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent>
+                            <PopoverArrow />
+                            <PopoverCloseButton />
+                            <PopoverHeader>
+                              Konfirmasi sebagai ambassador
+                            </PopoverHeader>
+                            <PopoverBody>
+                              <Button
+                                colorScheme={"purple"}
+                                onClick={() => {
+                                  const token = localStorage.getItem("token");
+                                  API.patchAdminAmbassador(
+                                    items.borrower_id,
+                                    token
+                                  ).then(() => router.reload());
+                                }}
+                              >
+                                Acc
+                              </Button>
+                            </PopoverBody>
+                          </PopoverContent>
+                        </Popover>
+                        <Popover>
+                          <PopoverTrigger>
+                            <Button colorScheme={"red"}>
+                              <CloseIcon />
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent>
+                            <PopoverArrow />
+                            <PopoverCloseButton />
+                            <PopoverHeader>
+                              Tolak sebagai ambassador
+                            </PopoverHeader>
+                            <PopoverBody>
+                              <Button
+                                colorScheme={"red"}
+                                onClick={() => {
+                                  const token = localStorage.getItem("token");
+                                  API.patchAdminAmbassadorReject(
+                                    items.borrower_id,
+                                    token
+                                  ).then((resp) => {
+                                    console.log(resp);
+                                    // router.reload();
+                                  });
+                                }}
+                              >
+                                Tolak
+                              </Button>
+                            </PopoverBody>
+                          </PopoverContent>
+                        </Popover>
                       </div>
                     </div>
                   </Stat>
@@ -114,6 +179,19 @@ function Ambassador() {
                         {items.university} | {items.study_program}
                       </StatLabel>
                       <StatHelpText>{items.email}</StatHelpText>
+                    </div>
+                    <div className="flex gap-5 items-center">
+                      <Tooltip hasArrow label="Lihat detail pengguna">
+                        <Button
+                          onClick={() =>
+                            router.push(`/admin/borrowers/${items.borrower_id}`)
+                          }
+                          variantColor="purple"
+                          variant="outline"
+                        >
+                          <span className="">Detail</span>
+                        </Button>
+                      </Tooltip>
                     </div>
                   </div>
                 </Stat>

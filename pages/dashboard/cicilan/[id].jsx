@@ -115,7 +115,7 @@ function Cicilan() {
                       {data?.item_url}
                     </a>
                   </li>
-                  <li>Bunga: {data?.interest_rate}%</li>
+                  <li>Bunga: {data?.interest_rate * 100}%</li>
                   <li>
                     Maksimal Pembayaran: Sebelum {data?.loan_tenure_in_months}{" "}
                     bulan
@@ -125,7 +125,13 @@ function Cicilan() {
               <div className="mt-10">
                 Status:{" "}
                 <Tag
-                  colorScheme={data?.status == "accepted" ? "green" : "yellow"}
+                  colorScheme={
+                    data?.status == "accepted"
+                      ? "green"
+                      : data?.status == "rejected"
+                      ? "red"
+                      : "yellow"
+                  }
                 >
                   {data?.status}
                 </Tag>

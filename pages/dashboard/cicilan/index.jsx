@@ -52,6 +52,7 @@ function Cicilan() {
   const [item, setItem] = useState("");
   const [pending, setPending] = useState("");
   const [accepted, setAccepted] = useState("");
+  const [rejected, setRejected] = useState("");
 
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("1");
@@ -72,6 +73,11 @@ function Cicilan() {
     API.getTicketAccepted(token).then((resp) => {
       setTimeout(() => {
         setAccepted(resp);
+      }, 200);
+    });
+    API.getTicketRejected(token).then((resp) => {
+      setTimeout(() => {
+        setRejected(resp);
       }, 200);
     });
   }, []);
@@ -156,7 +162,8 @@ function Cicilan() {
                         <div className="flex flex-col gap-3">
                           <Radio value="1">Semua</Radio>
                           <Radio value="2">Pending</Radio>
-                          <Radio value="3">Accepted</Radio>
+                          <Radio value="3">Rejected</Radio>
+                          <Radio value="4">Accepted</Radio>
                         </div>
                       </RadioGroup>
                     </AccordionPanel>
@@ -188,9 +195,11 @@ function Cicilan() {
                                     <Tag
                                       size="md"
                                       colorScheme={
-                                        items.status === "pending"
-                                          ? "yellow"
-                                          : "green"
+                                        items?.status == "accepted"
+                                          ? "green"
+                                          : items?.status == "rejected"
+                                          ? "red"
+                                          : "yellow"
                                       }
                                     >
                                       {items?.status}
@@ -358,6 +367,49 @@ function Cicilan() {
                                     </PopoverContent>
                                   </Portal>
                                 </Popover>
+                              </div>
+                            </Stat>
+                          ))}
+                        </>
+                      ) : (
+                        <div className="w-full h-40 flex justify-center items-center">
+                          <p>Belum ada item disini</p>
+                        </div>
+                      )}
+                    </>
+                  ) : filter == "3" ? (
+                    <>
+                      {item?.loan_tickets?.length != 0 ? (
+                        <>
+                          {rejected?.loan_tickets?.map((items) => (
+                            <Stat
+                              key={items.id}
+                              bg="white"
+                              rounded="xl"
+                              padding="5"
+                            >
+                              <div className="flex justify-between items-center">
+                                <div>
+                                  <StatLabel>{items.loanType}</StatLabel>
+                                  <StatNumber>{`Rp.${point(
+                                    parseInt(items.loan_amount, 10)
+                                  )}`}</StatNumber>
+                                  <StatHelpText>{`Batas hingga ${items.loan_tenure_in_months} bulan.`}</StatHelpText>
+                                  <StatHelpText>
+                                    <Tag size="md" colorScheme="red">
+                                      rejected
+                                    </Tag>
+                                    {items?.reviewed_by_ambassador_at ? (
+                                      <Tag colorScheme="purple">
+                                        sudah di review
+                                      </Tag>
+                                    ) : (
+                                      <Tag colorScheme="red">
+                                        belum di review
+                                      </Tag>
+                                    )}
+                                  </StatHelpText>
+                                </div>
                               </div>
                             </Stat>
                           ))}

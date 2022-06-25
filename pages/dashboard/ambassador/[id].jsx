@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { Image } from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 import Head from "next/head";
 import {
@@ -31,6 +31,12 @@ import {
   PopoverFooter,
   PopoverTrigger,
   useToast,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
 } from "@chakra-ui/react";
 import { CheckIcon, ChevronRightIcon, ViewIcon } from "@chakra-ui/icons";
 import React, { useEffect, useState } from "react";
@@ -41,13 +47,17 @@ import { phoneNum, point } from "../../../regex/point";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { bankNum } from "../../../regex/point";
 
 function Pinjaman() {
   const router = useRouter();
-  const [data, setData] = useState("");
+  const [data, setData] = useState({});
   const [user, setUser] = useState("");
   const [showPhone, setShowPhone] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [ktp, setKtp] = useState(false);
+  const [ktm, setKtm] = useState(false);
+  const [showBank, setShowBank] = useState(false);
   const { id } = router.query;
   const toast = useToast();
   dayjs.extend(relativeTime);
@@ -98,6 +108,45 @@ function Pinjaman() {
           </Breadcrumb>
           <Divider marginTop="5" />
         </div>
+
+        {/* show ktp modal */}
+        <Modal isOpen={ktp} onClose={() => setKtp(false)} size={"full"}>
+          <ModalOverlay />
+          <ModalContent bg={"rgb(0 0 0 / 0.6)"} rounded={"unset"}>
+            <ModalHeader></ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <div className="w-full h-[85vh] relative">
+                <Image
+                  src={`https://cicilaja.bagas3.my.id/${data?.borrower?.borrower_document?.ktp_url}`}
+                  alt="Foto KTP"
+                  layout="fill"
+                  objectFit="contain"
+                />
+              </div>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+
+        {/* show ktm modal */}
+        <Modal isOpen={ktm} onClose={() => setKtm(false)} size={"full"}>
+          <ModalOverlay />
+          <ModalContent bg={"rgb(0 0 0 / 0.6)"} rounded={"unset"}>
+            <ModalHeader></ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <div className="w-full h-[85vh] relative">
+                <Image
+                  src={`https://cicilaja.bagas3.my.id/${data?.borrower?.borrower_document?.ktm_url}`}
+                  alt="Foto KTM"
+                  layout="fill"
+                  objectFit="contain"
+                />
+              </div>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+
         {loading ? (
           <div className="w-full h-full flex justify-center items-center">
             <Spinner size="xl" />
@@ -269,6 +318,58 @@ function Pinjaman() {
                     <p>Pengguna belum melengkapi informasi bank</p>
                   </div>
                 )}
+              </div>
+              <h2 className="text-xl mb-2 mt-5">Data Ktp</h2>
+              <div className="w-60 h-40 relative">
+                {data?.borrower?.borrower_document?.ktm_url ? (
+                  <>
+                    <button
+                      onClick={() => setKtp(true)}
+                      className="opacity-0 hover:opacity-100 transition absolute z-10 w-full h-full bg-black/40 flex justify-center items-center text-white font-bold"
+                    >
+                      Show Fullsize
+                    </button>
+                    <Image
+                      src={`https://cicilaja.bagas3.my.id/${data?.borrower?.borrower_document?.ktp_url}`}
+                      alt="Foto KTP"
+                      layout="fill"
+                      objectFit="contain"
+                    />
+                  </>
+                ) : (
+                  <p className="w-full h-full flex justify-center items-center">
+                    <span className="text-center text-2xl">
+                      Belum ada foto KTP
+                    </span>
+                  </p>
+                )}
+              </div>
+              <div className="mt-5">
+                <h2 className="text-xl mb-2">Data Ktm</h2>
+                <div className="w-60 h-40 relative">
+                  {data?.borrower?.borrower_document?.ktm_url ? (
+                    <>
+                      <button
+                        onClick={() => setKtm(true)}
+                        className="opacity-0 hover:opacity-100 transition absolute z-10 w-full h-full bg-black/40 flex justify-center items-center text-white font-bold"
+                      >
+                        Show Fullsize
+                      </button>
+                      <Image
+                        src={`https://cicilaja.bagas3.my.id/${data?.borrower?.borrower_document?.ktm_url}`}
+                        alt="Foto KTM"
+                        layout="fill"
+                        objectFit="contain"
+                      />
+                    </>
+                  ) : (
+                    <p className="w-full h-full flex justify-center items-center">
+                      <span className="text-center text-2xl">
+                        Belum ada foto KTM
+                      </span>
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
             {data?.loan_ticket?.reviewed_by_ambassador_at ? (

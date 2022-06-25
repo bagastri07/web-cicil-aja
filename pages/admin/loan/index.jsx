@@ -45,6 +45,7 @@ function Loan() {
   const [loan, setLoan] = useState("");
   const [accepted, setAccepted] = useState("");
   const [pending, setPending] = useState("");
+  const [rejected, setRejected] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -59,6 +60,10 @@ function Loan() {
 
     API.getAdminLoanTicketAccepted(token).then((resp) => {
       setAccepted(resp);
+    });
+
+    API.getAdminLoanTicketRejected(token).then((resp) => {
+      setRejected(resp);
       setLoading(false);
     });
   }, []);
@@ -140,7 +145,8 @@ function Loan() {
                       <div className="flex flex-col gap-3">
                         <Radio value="1">Semua</Radio>
                         <Radio value="2">Pending</Radio>
-                        <Radio value="3">Accepted</Radio>
+                        <Radio value="3">Rejected</Radio>
+                        <Radio value="4">Accepted</Radio>
                       </div>
                     </RadioGroup>
                   </AccordionPanel>
@@ -175,6 +181,10 @@ function Loan() {
                               {items.status == "accepted" ? (
                                 <Tag size="sm" colorScheme="green">
                                   Accepted
+                                </Tag>
+                              ) : items.status == "rejected" ? (
+                                <Tag size="sm" colorScheme="red">
+                                  Rejected
                                 </Tag>
                               ) : (
                                 <Tag size="sm" colorScheme="yellow">
@@ -211,6 +221,37 @@ function Loan() {
                             <StatHelpText>
                               <Tag size="sm" colorScheme="yellow">
                                 Pending
+                              </Tag>
+                            </StatHelpText>
+                          </div>
+                        </div>
+                      </Stat>
+                    ))}
+                  </>
+                ) : filter == "3" ? (
+                  <>
+                    {rejected?.loan_tickets?.map((items) => (
+                      <Stat
+                        key={items.id}
+                        bg="white"
+                        rounded="xl"
+                        padding="5"
+                        cursor="pointer"
+                        _hover={{ opacity: "75%" }}
+                        onClick={() => router.push(`/admin/loan/${items.id}`)}
+                      >
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <StatLabel>{items.loanType}</StatLabel>
+                            <StatNumber>
+                              Rp.{point(items.loan_amount)}
+                            </StatNumber>
+                            <StatHelpText>
+                              Batas hingga {items.loan_tenure_in_months} bulan
+                            </StatHelpText>
+                            <StatHelpText>
+                              <Tag size="sm" colorScheme="red">
+                                Rejected
                               </Tag>
                             </StatHelpText>
                           </div>

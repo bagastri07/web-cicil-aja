@@ -33,6 +33,14 @@ const apiTicket = {
       .then((resp) => resp.data.data)
       .catch((err) => err),
 
+  getTicketRejected: (token) =>
+    fetcher
+      .get("/loan-tickets?status=rejected", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((resp) => resp.data.data)
+      .catch((err) => err),
+
   getDetailTicket: (id, token) =>
     fetcher
       .get(`/loan-tickets/${id}`, {

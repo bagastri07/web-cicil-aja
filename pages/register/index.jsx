@@ -24,6 +24,8 @@ import API from "../../api";
 
 import LoginRedirect from "../../auth/loginRedirect";
 
+import * as Yup from "yup";
+
 const Register = () => {
   const [regist, setRegist] = useState(true);
   const [form, setForm] = useState({});
@@ -49,7 +51,7 @@ const Register = () => {
           <div
             className="
           bg-white text-center
-          max-w-sm h-full mx-auto rounded-3xl p-14 pt-10"
+          max-w-sm h-full mx-auto rounded-3xl p-14 pt-10 overflow-y-scroll"
           >
             <h1 className="text-4xl font-semibold text-gray-900">Buat Akun</h1>
             {regist ? (
@@ -69,6 +71,20 @@ const Register = () => {
                     student_number: "",
                     phone_number: "",
                   }}
+                  validationSchema={Yup.object({
+                    name: Yup.string()
+                      .required("Nama harus diisi")
+                      .max(20, "Nama maksimal 20 karakter"),
+                    birthday: Yup.date()
+                      .required("Tanggal lahir harus diisi")
+                      .max(new Date(), "Tanggal lahir tidak valid"),
+                    email: Yup.string()
+                      .required("Email harus diisi")
+                      .email("Email tidak valid"),
+                    password: Yup.string()
+                      .required("Password harus diisi")
+                      .min(10, "Password minimal 10 karakter"),
+                  })}
                   onSubmit={(data, { setSubmitting }) => {
                     setTimeout(() => {
                       const date = data.birthday;
@@ -85,7 +101,7 @@ const Register = () => {
                 >
                   {({
                     touched,
-                    error,
+                    errors,
                     handleChange,
                     values,
                     setFieldValue,
@@ -98,6 +114,7 @@ const Register = () => {
                         Nama
                       </label>
                       <Field
+                        isInvalid={touched.name && errors.name}
                         type="text"
                         colorScheme="purple"
                         rounded="md"
@@ -105,8 +122,12 @@ const Register = () => {
                         size="md"
                         name="name"
                         as={Input}
-                        required
                       />
+                      {errors.name && touched.name ? (
+                        <div className="text-left text-red-400 text-xs">
+                          {errors.name}
+                        </div>
+                      ) : null}
                       <label
                         htmlFor=""
                         className="text-left opacity-60 text-sm"
@@ -119,6 +140,11 @@ const Register = () => {
                         onChange={(date) => setFieldValue("startDate", date)}
                         required
                       />
+                      {errors.birthday && touched.birthday ? (
+                        <div className="text-left text-red-400 text-xs">
+                          {errors.birthday}
+                        </div>
+                      ) : null}
                       <label
                         htmlFor=""
                         className="text-left opacity-60 text-sm"
@@ -126,6 +152,7 @@ const Register = () => {
                         Email
                       </label>
                       <Field
+                        isInvalid={touched.email && errors.email}
                         type="email"
                         colorScheme="purple"
                         rounded="md"
@@ -135,6 +162,11 @@ const Register = () => {
                         as={Input}
                         required
                       />
+                      {errors.email && touched.email ? (
+                        <div className="text-left text-red-400 text-xs">
+                          {errors.email}
+                        </div>
+                      ) : null}
                       <label
                         htmlFor=""
                         className="text-left opacity-60 text-sm"
@@ -142,6 +174,7 @@ const Register = () => {
                         Password
                       </label>
                       <Field
+                        isInvalid={touched.password && errors.password}
                         type="password"
                         colorScheme="purple"
                         rounded="md"
@@ -151,6 +184,11 @@ const Register = () => {
                         as={Input}
                         required
                       />
+                      {errors.password && touched.password ? (
+                        <div className="text-left text-red-400 text-xs">
+                          {errors.password}
+                        </div>
+                      ) : null}
                       <Button colorScheme="purple" marginTop="5" type="submit">
                         Lanjutkan
                       </Button>
@@ -166,6 +204,18 @@ const Register = () => {
                 <Formik
                   enableReinitialize
                   initialValues={form}
+                  validationSchema={Yup.object({
+                    university: Yup.string()
+                      .required("Universitas harus diisi")
+                      .max(50, "Universitas maksimal 50 karakter"),
+                    study_program: Yup.string()
+                      .required("Program studi harus diisi")
+                      .max(50, "Program studi maksimal 50 karakter"),
+                    student_number: Yup.number().required("NIM harus diisi"),
+                    phone_number: Yup.string()
+                      .required("Nomor telepon harus diisi")
+                      .matches(/^\+[1-9]{10,}$/, "Nomor telepon tidak valid"),
+                  })}
                   onSubmit={(data, { setSubmitting }) => {
                     setTimeout(() => {
                       API.postRegist(data).then((resp) => {
@@ -179,7 +229,7 @@ const Register = () => {
                     }, 500);
                   }}
                 >
-                  {({}) => (
+                  {({ touched, errors }) => (
                     <Form className="flex flex-col gap-1 mt-6">
                       <label
                         htmlFor=""
@@ -188,6 +238,7 @@ const Register = () => {
                         Universitas
                       </label>
                       <Field
+                        isInvalid={touched.university && errors.university}
                         type="text"
                         colorScheme="purple"
                         rounded="md"
@@ -195,8 +246,12 @@ const Register = () => {
                         size="md"
                         name="university"
                         as={Input}
-                        required
                       />
+                      {errors.university && touched.university ? (
+                        <div className="text-left text-red-400 text-xs">
+                          {errors.university}
+                        </div>
+                      ) : null}
                       <label
                         htmlFor=""
                         className="text-left opacity-60 text-sm"
@@ -204,6 +259,9 @@ const Register = () => {
                         Program Studi
                       </label>
                       <Field
+                        isInvalid={
+                          touched.study_program && errors.study_program
+                        }
                         type="text"
                         colorScheme="purple"
                         rounded="md"
@@ -211,8 +269,12 @@ const Register = () => {
                         size="md"
                         name="study_program"
                         as={Input}
-                        required
                       />
+                      {errors.study_program && touched.study_program ? (
+                        <div className="text-left text-red-400 text-xs">
+                          {errors.study_program}
+                        </div>
+                      ) : null}
                       <label
                         htmlFor=""
                         className="text-left opacity-60 text-sm"
@@ -220,6 +282,9 @@ const Register = () => {
                         Nomor Mahasiswa
                       </label>
                       <Field
+                        isInvalid={
+                          touched.student_number && errors.student_number
+                        }
                         type="text"
                         colorScheme="purple"
                         rounded="md"
@@ -227,8 +292,12 @@ const Register = () => {
                         size="md"
                         name="student_number"
                         as={Input}
-                        required
                       />
+                      {errors.student_number && touched.student_number ? (
+                        <div className="text-left text-red-400 text-xs">
+                          {errors.student_number}
+                        </div>
+                      ) : null}
                       <label
                         htmlFor=""
                         className="text-left opacity-60 text-sm"
@@ -239,6 +308,7 @@ const Register = () => {
                         </span>
                       </label>
                       <Field
+                        isInvalid={touched.phone_number && errors.phone_number}
                         type="tel"
                         colorScheme="purple"
                         rounded="md"
@@ -246,8 +316,12 @@ const Register = () => {
                         size="md"
                         name="phone_number"
                         as={Input}
-                        required
                       />
+                      {errors.phone_number && touched.phone_number ? (
+                        <div className="text-left text-red-400 text-xs">
+                          {errors.phone_number}
+                        </div>
+                      ) : null}
                       <div className="mt-5 flex gap-2">
                         <Button
                           colorScheme="purple"

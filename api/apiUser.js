@@ -52,6 +52,18 @@ const apiUser = {
       })
       .then((resp) => resp.data)
       .catch((err) => err),
+
+  postRegisterAsAmbassador: (token) =>
+    fetcher
+      .post(
+        "/ambassadors/register",
+        {},
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      .then((resp) => resp)
+      .catch((err) => err),
 };
 
 export default apiUser;

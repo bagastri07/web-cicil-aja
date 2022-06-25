@@ -47,6 +47,14 @@ const apiAdmin = {
       .then((resp) => resp.data.data)
       .catch((err) => err),
 
+  getAdminLoanTicketRejected: (token) =>
+    fetcher
+      .get("/_admin/loan-tickets?status=rejected", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((resp) => resp.data.data)
+      .catch((err) => err),
+
   getAdminLoanId: (id, token) =>
     fetcher
       .get(`_admin/loan-tickets/${id}`, {
@@ -61,6 +69,20 @@ const apiAdmin = {
         `/_admin/loan-tickets/${id}/update-status`,
         {
           status: "accepted",
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      .then((resp) => resp.data.data)
+      .catch((err) => err),
+
+  patchAdminLoanReject: (id, token) =>
+    fetcher
+      .patch(
+        `/_admin/loan-tickets/${id}/update-status`,
+        {
+          status: "rejected",
         },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -85,12 +107,34 @@ const apiAdmin = {
       .then((resp) => resp.data.data)
       .catch((err) => err),
 
+  getAdminAmbassadorRejected: (token) =>
+    fetcher
+      .get("/_admin/ambassadors/registrations?status=rejected", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((resp) => resp.data.data)
+      .catch((err) => err),
+
   patchAdminAmbassador: (id, token) =>
     fetcher
       .patch(
         `/_admin/ambassadors/${id}/update-status`,
         {
           status: "accepted",
+        },
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      )
+      .then((resp) => resp.data.data)
+      .catch((err) => err),
+
+  patchAdminAmbassadorReject: (id, token) =>
+    fetcher
+      .patch(
+        `/_admin/ambassadors/${id}/update-status`,
+        {
+          status: "rejected",
         },
         {
           headers: { Authorization: `Bearer ${token}` },

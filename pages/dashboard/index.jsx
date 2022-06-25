@@ -166,7 +166,13 @@ function Dashboard() {
                       pinjaman yang ada. Daftar, tunggu hingga pendaftaran
                       selesai, dan mulai dapatkan uangmu dengan me-review dari
                       gadgetmu.{" "}
-                      <Button variant="link" colorScheme="purple">
+                      <Button
+                        variant="link"
+                        colorScheme="purple"
+                        onClick={() =>
+                          router.push("/dashboard/daftar_ambassador")
+                        }
+                      >
                         Daftar disini
                       </Button>
                     </p>

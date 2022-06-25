@@ -12,6 +12,12 @@ import {
   CloseButton,
   Divider,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Skeleton,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
@@ -30,6 +36,9 @@ function Document() {
   const [user, setUser] = useState("");
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+
+  const [ktp, setKtp] = useState(false);
+  const [ktm, setKtm] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -67,6 +76,45 @@ function Document() {
           </Breadcrumb>
           <Divider marginTop="5" />
         </div>
+
+        {/* show ktp modal */}
+        <Modal isOpen={ktp} onClose={() => setKtp(false)} size={"full"}>
+          <ModalOverlay />
+          <ModalContent bg={"rgb(0 0 0 / 0.6)"} rounded={"unset"}>
+            <ModalHeader></ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <div className="w-full h-[85vh] relative">
+                <Image
+                  src={`https://cicilaja.bagas3.my.id/${user?.borrower_document?.ktp_url}`}
+                  alt="Foto KTP"
+                  layout="fill"
+                  objectFit="contain"
+                />
+              </div>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+
+        {/* show ktm modal */}
+        <Modal isOpen={ktm} onClose={() => setKtm(false)} size={"full"}>
+          <ModalOverlay />
+          <ModalContent bg={"rgb(0 0 0 / 0.6)"} rounded={"unset"}>
+            <ModalHeader></ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <div className="w-full h-[85vh] relative">
+                <Image
+                  src={`https://cicilaja.bagas3.my.id/${user?.borrower_document?.ktm_url}`}
+                  alt="Foto KTM"
+                  layout="fill"
+                  objectFit="contain"
+                />
+              </div>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+
         <div className="">
           <h1 className="text-4xl">Edit Dokumen</h1>
           <div className="w-full bg-purple-100 rounded-xl p-5 mt-5">
@@ -74,15 +122,25 @@ function Document() {
             <Skeleton isLoaded={!loading}>
               <div className="w-60 h-40 relative">
                 {user?.borrower_document?.ktm_url ? (
-                  <Image
-                    src={`https://cicilaja.bagas3.my.id/${user?.borrower_document?.ktp_url}`}
-                    alt="Foto KTP"
-                    layout="fill"
-                    objectFit="contain"
-                  />
+                  <>
+                    <button
+                      onClick={() => setKtp(true)}
+                      className="opacity-0 hover:opacity-100 transition absolute z-10 w-full h-full bg-black/40 flex justify-center items-center text-white font-bold"
+                    >
+                      Show Fullsize
+                    </button>
+                    <Image
+                      src={`https://cicilaja.bagas3.my.id/${user?.borrower_document?.ktp_url}`}
+                      alt="Foto KTP"
+                      layout="fill"
+                      objectFit="contain"
+                    />
+                  </>
                 ) : (
                   <p className="w-full h-full flex justify-center items-center">
-                    Sorry no image found here
+                    <span className="text-center text-2xl">
+                      Belum ada foto KTP
+                    </span>
                   </p>
                 )}
               </div>
@@ -102,15 +160,25 @@ function Document() {
             <Skeleton isLoaded={!loading}>
               <div className="w-60 h-40 relative">
                 {user?.borrower_document?.ktp_url ? (
-                  <Image
-                    src={`https://cicilaja.bagas3.my.id/${user?.borrower_document?.ktm_url}`}
-                    alt="Foto KTM"
-                    layout="fill"
-                    objectFit="contain"
-                  />
+                  <>
+                    <button
+                      onClick={() => setKtm(true)}
+                      className="opacity-0 hover:opacity-100 transition absolute z-10 w-full h-full bg-black/40 flex justify-center items-center text-white font-bold"
+                    >
+                      Show Fullsize
+                    </button>
+                    <Image
+                      src={`https://cicilaja.bagas3.my.id/${user?.borrower_document?.ktm_url}`}
+                      alt="Foto KTM"
+                      layout="fill"
+                      objectFit="contain"
+                    />
+                  </>
                 ) : (
                   <p className="w-full h-full flex justify-center items-center">
-                    Sorry no image found here
+                    <span className="text-center text-2xl">
+                      Belum ada foto KTM
+                    </span>
                   </p>
                 )}
               </div>

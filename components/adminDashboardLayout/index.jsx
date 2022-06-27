@@ -77,7 +77,7 @@ function AdminDashboardLayout({ page, children }) {
               w="full"
               onClick={() => router.push("/admin/borrowers")}
             >
-              Peminjam
+              Pencicil
             </Button>
             <Button
               colorScheme="purple"
@@ -85,7 +85,7 @@ function AdminDashboardLayout({ page, children }) {
               w="full"
               onClick={() => router.push("/admin/loan")}
             >
-              Cicilan
+              Tiket Cicilan
             </Button>
             <Button
               colorScheme="purple"

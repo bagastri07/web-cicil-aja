@@ -79,10 +79,11 @@ function Edit() {
           </h2>
           <div className="py-5">
             <Formik
+              enableReinitialize={true}
               initialValues={{
-                bank_name: "",
-                account_number: "",
-                account_recipient: "",
+                bank_name: user?.bank_information?.bank_name,
+                account_number: user?.bank_information?.account_number,
+                account_recipient: user?.bank_information?.account_recipient,
               }}
               onSubmit={(data, { setSubmitting }) => {
                 setTimeout(() => {
@@ -110,13 +111,14 @@ function Edit() {
                 });
               }}
             >
-              {({}) => (
+              {({ values }) => (
                 <Form className="w-full bg-purple-100 rounded-xl p-5">
                   <h2 className="text-xl mb-2">Data Bank</h2>
                   <ul>
                     <li>
                       Nama Bank:
                       <Field
+                        value={values.bank_name}
                         as={Input}
                         type="text"
                         name="bank_name"
@@ -128,6 +130,7 @@ function Edit() {
                     <li>
                       Nomor Rekening:
                       <Field
+                        value={values.account_number}
                         as={Input}
                         name="account_number"
                         variant="outline"
@@ -139,6 +142,7 @@ function Edit() {
                     <li>
                       Pemilik Rekening:
                       <Field
+                        value={values.account_recipient}
                         as={Input}
                         name="account_recipient"
                         variant="outline"
